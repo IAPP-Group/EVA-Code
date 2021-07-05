@@ -41,8 +41,28 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 ## Testing
 
+### Requirements
+- tested with Python 3.8.10 and the following packages:
+
+```
+bokeh==2.3.2
+scikit-learn==0.24.2
+xmltodict==0.12.0
+```
+
+### Data
+
 - uncompress `./code/Containers.tar.gz`
+
+
+### Replicate results
+
 - run `./code/run_all.sh`
 ```
-bash ./code/run_all.sh
+cd code
+bash run_all.sh
 ```
+
+## TODO
+- verificare risultati articolo con cartella `/code/plots/`
+- se tutto bene, rilasciare sottocartella plots

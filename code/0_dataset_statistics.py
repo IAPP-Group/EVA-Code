@@ -1,4 +1,11 @@
 #!/usr/bin/env python3
+# @Author: Daniele Baracchi
+# @Date:   2021-07-05
+# @Email:  daniele.baracchi@unifi.it
+# @Last modified by:   Daniele Baracchi
+# @Last modified time: 2021-07-05
+# @License: GPL-3.0-or-later
+# @Copyright: Copyright (C) 2021  Università degli studi di Firenze
 
 import argparse
 import tempfile

@@ -8,12 +8,9 @@
 # @Copyright: Copyright (C) 2021  Università degli studi di Firenze
 
 import argparse
-import tempfile
 import os
 import subprocess
 import csv
-import datetime
-from collections import defaultdict
 
 
 subset_folders = ["subset_avidemux", "subset_ffmpeg1", "subset_ffmpeg3",

@@ -40,3 +40,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 ## Testing
+
+- uncompress `./code/Containers.tar.gz`
+- run `./code/run_all.sh`
+```
+bash ./code/run_all.sh
+```

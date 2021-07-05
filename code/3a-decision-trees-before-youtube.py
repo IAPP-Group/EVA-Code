@@ -11,8 +11,7 @@ import argparse
 import os
 import pickle
 
-from sklearn.metrics import accuracy_score, classification_report, \
-        confusion_matrix
+from sklearn.metrics import classification_report, confusion_matrix
 from sklearn.tree import DecisionTreeClassifier
 
 from common_defs import find_all_symbols, find_device_ids, \

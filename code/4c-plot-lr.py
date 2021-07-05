@@ -10,15 +10,10 @@
 import argparse
 import math
 import os
-import pickle
 
-from bokeh import colors
+
 from bokeh.models import ColumnDataSource
 from bokeh.plotting import figure, output_file, save
-
-import numpy as np
-
-from sklearn.metrics import confusion_matrix
 
 from common_defs import get_likelihood_symbols
 

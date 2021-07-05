@@ -12,7 +12,7 @@ import math
 import os
 import pickle
 
-from common_defs import BRANDS_FOR_DEVICES, find_all_symbols, \
+from common_defs import find_all_symbols, \
         find_device_ids, get_info_for_device
 
 

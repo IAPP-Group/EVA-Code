@@ -45,9 +45,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 - tested with Python 3.8.10 and the following packages:
 
 ```
-bokeh==2.3.2
-scikit-learn==0.24.2
-xmltodict==0.12.0
+bokeh==2.3
+scikit-learn==0.24
+xmltodict==0.12
 ```
 
 ### Data
@@ -58,11 +58,25 @@ xmltodict==0.12.0
 ### Replicate results
 
 - run `./code/run_all.sh`
+
 ```
 cd code
 bash run_all.sh
 ```
 
-## TODO
-- verificare risultati articolo con cartella `/code/plots/`
-- se tutto bene, rilasciare sottocartella plots
+The table results are accessible at the following paths:
+
+- **Table I**: results/tampering-detector/no-os/no-lr/non-SN-acc.txt
+- **Table III**: results/tampering-classifier/no-os/no-lr/non-SN-cm.html
+- **Table IV**: results/tampering-classifier/os/no-lr/non-SN-cm.html
+- **Table VI**: results/blind-classifier/os/no-lr/blind-cm.html
+- **Table V**: run the `get_global_accuracy.py` script as in 
+    
+    ```
+    python get_global_accuracy.py results/tampering-detector/no-os/no-lr/Facebook.pkl
+    python get_global_accuracy.py results/tampering-detector/no-os/no-lr/Tiktok.pkl 
+    python get_global_accuracy.py results/tampering-detector/no-os/no-lr/Weibo.pkl 
+    python get_global_accuracy.py results/tampering-detector/no-os/no-lr/Youtube.pkl 
+    ```
+
+**NOTE**: Be aware that the overall results will need **4.3 GB** of storage.

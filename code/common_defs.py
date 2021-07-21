@@ -1,17 +1,18 @@
-#!/usr/bin/env python3
 # @Author: Daniele Baracchi
-# @Date:   2021-07-05
+# @Date:   2021-07-21
 # @Email:  daniele.baracchi@unifi.it
 # @Last modified by:   Daniele Baracchi
-# @Last modified time: 2021-07-05
+# @Last modified time: 2021-07-21
 # @License: GPL-3.0-or-later
 # @Copyright: Copyright (C) 2021  Università degli studi di Firenze
 
 import math
 import pickle
 
+from sklearn.tree import DecisionTreeClassifier
 
-SOCIAL_CLASSES = ["Before-YouTube", "After-YouTube"]
+
+SOCIAL_CLASSES = ["Facebook", "Tiktok", "Weibo", "Youtube", "non-SN"]
 
 MANIPULATION_CLASSES = ['avidemux', 'exiftool', 'ffmpeg1', 'ffmpeg2',
         'ffmpeg3', 'ffmpeg4', 'ffmpeg5', 'kdenlive', 'native', 'premiere']
@@ -141,3 +142,7 @@ def get_video_data(sequence, chosen_symbols):
             result[i] = 1
 
     return result
+
+
+def get_classifier():
+    return DecisionTreeClassifier(class_weight='balanced', min_samples_leaf=12)

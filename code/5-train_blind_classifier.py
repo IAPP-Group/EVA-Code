@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 # @Author: Daniele Baracchi
-# @Date:   2021-07-05
+# @Date:   2021-07-21
 # @Email:  daniele.baracchi@unifi.it
 # @Last modified by:   Daniele Baracchi
-# @Last modified time: 2021-07-05
+# @Last modified time: 2021-07-21
 # @License: GPL-3.0-or-later
 # @Copyright: Copyright (C) 2021  Università degli studi di Firenze
 
@@ -11,10 +11,10 @@ import argparse
 import os
 import pickle
 
-from sklearn.metrics import classification_report, confusion_matrix
-from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import accuracy_score, classification_report, \
+        confusion_matrix
 
-from common_defs import find_all_symbols, find_device_ids, \
+from common_defs import find_all_symbols, find_device_ids, get_classifier, \
         get_info_for_device, get_video_data, load_likelihood_data
 
 
@@ -34,18 +34,22 @@ def main(args):
 
     device_ids = list(sorted(find_device_ids(dataset)))
 
-    social_sequences = dataset['After-YouTube']
-
     chosen_classes = []
 
-    if args.use_os_info:
-        chosen_classes.append('Android-Native')
-        chosen_classes.append('iOS-Native')
-        chosen_classes.append('Android-Tampered')
-        chosen_classes.append('iOS-Tampered')
-    else:
-        chosen_classes.append('Native')
-        chosen_classes.append('Tampered')
+    for manip_name in dataset['non-SN'].keys():
+        if args.use_os_info:
+            chosen_classes.append('Android-{}'.format(manip_name))
+            chosen_classes.append('iOS-{}'.format(manip_name))
+        else:
+            chosen_classes.append(manip_name)
+
+    sn_classes = set()
+
+    for key in dataset.keys():
+        if key == 'non-SN':
+            continue
+        chosen_classes.append(key)
+        sn_classes.add(key)
 
     run_symbols = {}
     classifiers = {}
@@ -57,7 +61,8 @@ def main(args):
 
         if args.likelihood_ratios_path is not None:
             lr_path = os.path.join(args.likelihood_ratios_path,
-                    '{}-lr.pkl'.format(test_device_id))
+                    '{}-lr{}.pkl'.format(test_device_id,
+                        '-os' if args.use_os_info else ''))
 
             chosen_symbols = load_likelihood_data(lr_path, args.use_os_info)
         else:
@@ -72,32 +77,31 @@ def main(args):
         test_xs = []
         test_ys = []
 
-        for manip_name, manip_sequences in social_sequences.items():
-            for device_id, device_sequences in manip_sequences.items():
-                if args.use_os_info:
-                    device_brand, device_os = get_info_for_device(device_id)
-                    if manip_name == 'native':
-                        videos_class = '{}-Native'.format(device_os)
+        for social_name, social_sequences in dataset.items():
+            for manip_name, manip_sequences in social_sequences.items():
+                for device_id, device_sequences in manip_sequences.items():
+                    if social_name in sn_classes:
+                        videos_class = social_name
+                    elif args.use_os_info:
+                        device_brand, device_os = \
+                                get_info_for_device(device_id)
+                        videos_class = '{}-{}'.format(device_os, manip_name)
                     else:
-                        videos_class = '{}-Tampered'.format(device_os)
-                else:
-                    if manip_name == 'native':
-                        videos_class = 'Native'
-                    else:
-                        videos_class = 'Tampered'
+                        videos_class = manip_name
 
-                for device_sequence in device_sequences:
-                    video_x = get_video_data(device_sequence, chosen_symbols)
-                    video_y = chosen_classes.index(videos_class)
+                    for device_sequence in device_sequences:
+                        video_x = get_video_data(device_sequence,
+                                chosen_symbols)
+                        video_y = chosen_classes.index(videos_class)
 
-                    if device_id == test_device_id:
-                        test_xs.append(video_x)
-                        test_ys.append(video_y)
-                    else:
-                        train_xs.append(video_x)
-                        train_ys.append(video_y)
+                        if device_id == test_device_id:
+                            test_xs.append(video_x)
+                            test_ys.append(video_y)
+                        else:
+                            train_xs.append(video_x)
+                            train_ys.append(video_y)
 
-        clf = DecisionTreeClassifier(class_weight='balanced')
+        clf = get_classifier()
         clf.fit(train_xs, train_ys)
 
         run_symbols[test_device_id] = chosen_symbols
@@ -105,8 +109,11 @@ def main(args):
         y_true[test_device_id] = test_ys
         y_pred[test_device_id] = clf.predict(test_xs)
 
+    os.makedirs(args.output_path, exist_ok=True)
+    output_path = os.path.join(args.output_path, 'blind.pkl')
+
     result = (chosen_classes, run_symbols, classifiers, y_true, y_pred)
-    with open(args.output_path, 'wb') as stream:
+    with open(output_path, 'wb') as stream:
         pickle.dump(result, stream, pickle.HIGHEST_PROTOCOL)
 
     flat_y_true = []

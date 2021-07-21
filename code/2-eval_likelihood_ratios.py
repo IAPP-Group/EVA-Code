@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 # @Author: Daniele Baracchi
-# @Date:   2021-07-05
+# @Date:   2021-07-21
 # @Email:  daniele.baracchi@unifi.it
 # @Last modified by:   Daniele Baracchi
-# @Last modified time: 2021-07-05
+# @Last modified time: 2021-07-21
 # @License: GPL-3.0-or-later
 # @Copyright: Copyright (C) 2021  Università degli studi di Firenze
 
@@ -12,7 +12,7 @@ import math
 import os
 import pickle
 
-from common_defs import find_all_symbols, \
+from common_defs import BRANDS_FOR_DEVICES, find_all_symbols, \
         find_device_ids, get_info_for_device
 
 
@@ -134,6 +134,8 @@ def main(args):
 
     all_ratios = {}
 
+    os.makedirs(args.output_path, exist_ok=True)
+
     if args.use_os_info:
         for device_id in find_device_ids(sequences):
             print("Device ID: {}".format(device_id))
@@ -141,7 +143,7 @@ def main(args):
             result = (symbols, classes, ratios)
 
             result_path = os.path.join(args.output_path,
-                    '{}-lr.pkl'.format(device_id))
+                    '{}-lr-os.pkl'.format(device_id))
 
             with open(result_path, 'wb') as stream:
                 pickle.dump(result, stream, pickle.HIGHEST_PROTOCOL)

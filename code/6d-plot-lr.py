@@ -1,19 +1,24 @@
 #!/usr/bin/env python3
 # @Author: Daniele Baracchi
-# @Date:   2021-07-05
+# @Date:   2021-07-21
 # @Email:  daniele.baracchi@unifi.it
 # @Last modified by:   Daniele Baracchi
-# @Last modified time: 2021-07-05
+# @Last modified time: 2021-07-21
 # @License: GPL-3.0-or-later
 # @Copyright: Copyright (C) 2021  Università degli studi di Firenze
 
 import argparse
 import math
 import os
+import pickle
 
-
+from bokeh import colors
 from bokeh.models import ColumnDataSource
 from bokeh.plotting import figure, output_file, save
+
+import numpy as np
+
+from sklearn.metrics import confusion_matrix
 
 from common_defs import get_likelihood_symbols
 
